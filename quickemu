@@ -299,6 +299,13 @@ function configure_cpu() {
         QEMU_ACCEL="hvf"
         # QEMU for macOS from Homebrew does not support SMM
         SMM="off"
+
+        # Apple Silicon support to run arm64 VMs (best guess; untested)
+        # https://qemu-project.gitlab.io/qemu/system/arm/virt.html
+        if [ "${ARCH_HOST}" == "arm64" ] && [ "${ARCH_VM}" == "aarch64"  ]; then
+            CPU_MODEL="max"
+            MACHINE_TYPE="virt,highmem=off"
+        fi
     else
         MANUFACTURER=$(head -1 /sys/class/dmi/id/sys_vendor)
         CPU_KVM_UNHALT=",kvm_pv_unhalt"
